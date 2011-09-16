@@ -1,13 +1,9 @@
 {
-  "name": "app",
-  "version": "0.0.1",
-  "engines": {
-    "node": "*"
-  },
-  "dependencies": { 
-    "ace": "~0.0.1",
-  },
-  "devDependencies": {
-    "hem": "~0.0.6"
+    "name": "hawk"
+  , "version": "0.0.1"
+  , "private": true
+  , "dependencies": {
+      "spine": "0.0.9",
+      "express": "2.4.6"
   }
 }
