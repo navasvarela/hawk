@@ -1,0 +1,9 @@
+{
+    "name": "hawk"
+  , "version": "0.0.1"
+  , "private": true
+  , "dependencies": {
+      "spine": "0.0.9",
+      "express": "2.4.6"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "app",
+  "version": "0.0.1",
+  "engines": {
+    "node": "*"
+  },
+  "dependencies": { 
+    "ace": "~0.0.1",
+  },
+  "devDependencies": {
+    "hem": "~0.0.6"
+  }
+}
