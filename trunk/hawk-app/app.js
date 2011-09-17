@@ -1,14 +1,9 @@
-
-/**
- * Module dependencies.
- */
-
-var express = require('express');
+var express = require('express'),
+    mongoose = require('mongoose');
 
 var app = module.exports = express.createServer();
 
 // Configuration
-
 app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
@@ -19,7 +14,9 @@ app.configure(function(){
 });
 
 app.configure('development', function(){
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
+  app.use(
+    express.logger(),
+    express.errorHandler({ dumpExceptions: true, showStack: true })); 
 });
 
 app.configure('production', function(){
@@ -29,10 +26,12 @@ app.configure('production', function(){
 // Routes
 
 app.get('/', function(req, res){
-  res.render('index', {
-    title: 'Express'
-  });
+  res.sendfile('./public/index.html');
 });
+
+require('./lib/routes/instances')(app);
+
+mongoose.connect('mongodb://localhost/hawk-dev');
 
 app.listen(3000);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
