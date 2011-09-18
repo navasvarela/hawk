@@ -5,6 +5,7 @@ var util = require('util'),
 var InstanceRoute = Spine.Class.create({
     init: function(app) {
         app.get('/instances', this.getInstances);
+        app.get('/instances/:instancename/count', this.countInstances);
         app.get('/instances/:instancename', this.getInstance);
         app.post('/instances', this.postInstance);
         app.put('/instances', this.putInstance);
@@ -18,9 +19,7 @@ var InstanceRoute = Spine.Class.create({
     getInstance: function(request, response) {
         var instancename = request.params.instancename;
         console.log("Hawk: getInstance(" + instancename + ")");
-        Instance.find({
-            "name": instancename
-        }, function(err, instances) {
+        Instance.find({ "name": instancename }, function(err, instances) {
             if (err) {
                 console.log("Unable to find instance:" + instancename + " - " + err);
                 response.send(500);
@@ -31,24 +30,41 @@ var InstanceRoute = Spine.Class.create({
             }
         });
     },
-    poseInstance: function(request, response) {
+    countInstances: function(request, response) {
+        var instanceName = request.params.instancename;
+        console.log("Counting all instances of " + instanceName);
+        Instance.count({ name: instanceName }, function(err, count) {
+            console.log("Total instances:" + count);
+            response.send('OK');
+        });
+    },
+    postInstance: function(request, response) {
         console.log("Hawk: postInstance " + util.inspect(request.body));
         var instanceName = request.body.name;
-        if (Instance.find({
-            name: instanceName
-        })) {
-            console.log("Cannot create an existing instance:" + instanceName);
-            response.send(409);
-        }
-        else {
-            InstanceRoute.saveInstance(request.body);
-            response.send('OK');
-        }
+        Instance.count({ name: instanceName }, function(err, count) {
+            if (count === 0) {
+                InstanceRoute.saveInstance(request.body);
+                response.send('OK');        
+            } else {
+                console.log("Cannot create an existing instance:" + instanceName);
+                response.send(409);
+            }
+        });
+        
     },
     putInstance: function(request, response) {
         console.log("Hawk: putInstance" + util.inspect(request.body));
-        InstanceRoute.saveInstance(request.body);
-        response.send('OK');
+        var instanceName = request.body.name;
+        
+        Instance.count({ name: instanceName }, function(err, count) {
+            if (count === 0) {
+                console.log("Instance not found:" + instanceName);
+                response.send(404);
+            } else {
+                InstanceRoute.saveInstance(request.body);
+                response.send('OK');
+            }
+        });
     }
 });
 

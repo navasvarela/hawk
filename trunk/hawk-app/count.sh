@@ -7,15 +7,8 @@ echo "Starting express application"
 node app.js & disown
 sleep 2
 echo "--------------------------------------------------------------------------"
-echo "Getting all instances"
-curl -i -X GET $INSTANCEURL/i-8212
-sleep 2
-echo "--------------------------------------------------------------------------"
-echo "Creating a new instance"
-curl -i -X POST -d @ni.json -H "Content-Type: application/json" $INSTANCEURL
-echo "--------------------------------------------------------------------------"
-echo "Updating an instance"
-curl -i -X PUT -d @iu.json -H "Content-Type: application/json" $INSTANCEURL
+echo "Getting count of all instances"
+curl -i -X GET $INSTANCEURL/i-8212/count
 sleep 2
 echo "--------------------------------------------------------------------------"
 echo "Killing all node processes"
