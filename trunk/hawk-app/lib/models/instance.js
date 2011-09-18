@@ -4,22 +4,9 @@ var ObjectId = Schema.ObjectId;
 
 var Instance = new Schema({
   id :ObjectId,
-  entityId :String, 
+  name :String, 
   state :String,
-  stateChanged: Date
+  stateChanged: { type: Date, default: Date.now }
 });
 
-var TestInstance = mongoose.model('Instance', Instance);
-
-// setup test data
-var i1 = new TestInstance();
-i1.name="i-a1";
-i1.state = "pending";
-i1.save();
-
-var i2 = new TestInstance();
-i2.name = "i-a2";
-i2.state = "running";
-i2.save();
-
-module.exports = mongoose.model('Instance');
+module.exports = mongoose.model('Instance', Instance);

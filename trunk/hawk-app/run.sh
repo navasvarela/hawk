@@ -1,1 +1,22 @@
-node app.js & disown; sleep 2; curl -X POST -d @ni.json http://localhost:3000/instances; ps -ef | grep node | grep -v 'grep.node' | awk '{print $2}' | xargs kill -9
+#!/bin/bash
+
+INSTANCEURL="http://localhost:3000/instances"
+
+echo "Starting express application"
+node app.js & disown
+sleep 2
+echo ""
+echo "Getting all instances"
+curl -i -X GET $INSTANCEURL/i-821a2
+sleep 2
+echo ""
+echo "Creating a new instance"
+curl -i -X POST -d @ni.json -H "Content-Type: application/json" $INSTANCEURL
+echo ""
+echo "Updating an instance"
+curl -i -X PUT -d @iu.json -H "Content-Type: application/json" $INSTANCEURL
+sleep 2
+echo ""
+echo "Killing all node processes"
+ps -ef | grep node | grep -v 'grep.node' | awk '{print $2}' | xargs kill -9
+
