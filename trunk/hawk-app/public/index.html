@@ -1,5 +1,14 @@
 <html>
-<head></head>
+<head>
+    <script type="text/javascript" src="http://109.144.10.52:8000/faye.js"></script>
+    <script type="text/javascript">
+        var client = new Faye.Client('http://109.144.10.52:8000/faye');
+        var subscription = client.subscribe('/faye', function(message) {
+            console.log(message);    
+        });
+        
+    </script>
+</head>
 <body>
 <p> This is a simple HTML file </p>
 </body>
