@@ -14,16 +14,16 @@ var saveInstance = function(inputInstance) {
   });
 };
 
-var get_instances = function(request, response) {
-  console.log("Hawk: get_instance");
+var getInstances = function(request, response) {
+  console.log("Hawk: getInstance");
   Instance.find({}, function(err, instances) {
       response.json(instances);
   });
 };
 
-var get_instance = function(request, response) {
+var getInstance = function(request, response) {
   var instancename = request.params.instancename;
-  console.log("Hawk: get_instance(" + instancename + ")");
+  console.log("Hawk: getInstance(" + instancename + ")");
   Instance.find({"name": instancename}, function(err, instances) {
     if (err) {
       console.log("Unable to find instance:" + instancename + " - " + err);
@@ -35,8 +35,8 @@ var get_instance = function(request, response) {
   });
 };
 
-var post_instance = function(request, response) {
-  console.log("Hawk: post_instance " + util.inspect(request.body));
+var postInstance = function(request, response) {
+  console.log("Hawk: postInstance " + util.inspect(request.body));
   var instanceName = request.body.name;
 
   if (Instance.find({name: instanceName})) {
@@ -48,15 +48,16 @@ var post_instance = function(request, response) {
   }
 };
 
-var put_instance = function(request, response) {
-  console.log("Hawk: put_instance" + util.inspect(request.body));
+var putInstance = function(request, response) {
+  var self = this;
+  console.log("Hawk: putInstance" + util.inspect(request.body));
   saveInstance(request.body);
   response.send('OK');
 };
 
 module.exports = function(app) {
-  app.get('/instances', get_instances);
-  app.get('/instances/:instancename', get_instance);
-  app.post('/instances', post_instance);
-  app.put('/instances', put_instance);
+  app.get('/instances', getInstances);
+  app.get('/instances/:instancename', getInstance);
+  app.post('/instances', postInstance);
+  app.put('/instances', putInstance);
 };
