@@ -1,6 +1,7 @@
 var express = require('express'),
     mongoose = require('mongoose'),
     InstanceRoute = require('./lib/routes/instances'),
+    InstanceModel = require('./lib/models/instance'),
     faye = require('faye');
 
 var app = module.exports = express.createServer();
@@ -19,6 +20,9 @@ app.configure('development', function(){
   app.use(
     express.logger(),
     express.errorHandler({ dumpExceptions: true, showStack: true })); 
+    
+    console.log("clear the database");
+    InstanceModel.remove({}, function(){});
 });
 
 app.configure('production', function(){
@@ -30,15 +34,21 @@ app.get('/', function(req, res){
   res.sendfile('./public/index.html');
 });
 
+// catch errors
+app.post('/errors', function(req, res) {
+   console.log("New error:" + req.body);
+   res.send('OK');
+});
+
 var bayeux = new faye.NodeAdapter({mount: '/faye', timeout: 45});
 bayeux.attach(app);
 
 var instanceRoute = new InstanceRoute(app);
 
-InstanceRoute.bind("create", function(message) {
-    console.log("Created:" + message);
+InstanceRoute.bind("create update", function(message) {
+    console.log("new instance message:" + message);
     bayeux.getClient().publish('/faye', {
-        text: 'New email has arrived'
+        text: message
     });
 });
 

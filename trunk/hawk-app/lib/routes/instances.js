@@ -42,9 +42,11 @@ var InstanceRoute = Spine.Class.create({
         console.log("Hawk: postInstance " + util.inspect(request.body));
         var instanceName = request.body.name;
         Instance.count({ name: instanceName }, function(err, count) {
+            console.log("Instance " + instanceName + " count:" + count);
             if (count === 0) {
+                InstanceRoute.trigger("create", instanceName);
                 InstanceRoute.saveInstance(request.body);
-                response.send('OK');        
+                response.send('OK');
             } else {
                 console.log("Cannot create an existing instance:" + instanceName);
                 response.send(409);
@@ -57,16 +59,17 @@ var InstanceRoute = Spine.Class.create({
         var instanceName = request.body.name;
         
         Instance.count({ name: instanceName }, function(err, count) {
+            console.log("Instance " + instanceName + " count:" + count);
             if (count === 0) {
                 console.log("Instance not found:" + instanceName);
                 response.send(404);
             } else {
+                InstanceRoute.trigger("update", instanceName);
                 InstanceRoute.saveInstance(request.body);
                 response.send('OK');
             }
         });
         
-        InstanceRoute.trigger("create", "some data");
     }
 });
 
