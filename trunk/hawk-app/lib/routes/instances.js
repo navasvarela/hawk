@@ -65,6 +65,8 @@ var InstanceRoute = Spine.Class.create({
                 response.send('OK');
             }
         });
+        
+        InstanceRoute.trigger("create", "some data");
     }
 });
 
