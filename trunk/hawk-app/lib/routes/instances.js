@@ -60,14 +60,9 @@ var InstanceRoute = Spine.Class.create({
         
         Instance.count({ name: instanceName }, function(err, count) {
             console.log("Instance " + instanceName + " count:" + count);
-            if (count === 0) {
-                console.log("Instance not found:" + instanceName);
-                response.send(404);
-            } else {
-                InstanceRoute.trigger("update", instanceName);
-                InstanceRoute.saveInstance(request.body);
-                response.send('OK');
-            }
+            InstanceRoute.trigger("update", instanceName);
+            InstanceRoute.saveInstance(request.body);
+            response.send('OK');
         });
         
     }
