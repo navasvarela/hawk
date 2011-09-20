@@ -84,4 +84,7 @@ InstanceController.extend({
 });
 
 InstanceController.extend(Spine.Events);
-module.exports = InstanceController;
+module.exports = function(app) {
+    new InstanceController(app);  
+    return InstanceController;
+};

@@ -1,6 +1,5 @@
 var express = require('express'),
     mongoose = require('mongoose'),
-    InstanceController = require('./lib/controllers/instancecontroller'),
     InstanceModel = require('./lib/models/instance'),
     faye = require('faye');
 
@@ -43,7 +42,7 @@ app.post('/errors', function(req, res) {
 var bayeux = new faye.NodeAdapter({mount: '/faye', timeout: 45});
 bayeux.attach(app);
 
-var instanceController = new InstanceController(app);
+var InstanceController = require('./lib/controllers/instancecontroller')(app);
 
 InstanceController.bind("create update", function(message) {
     console.log("new instance message:" + message);
