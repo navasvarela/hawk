@@ -8,7 +8,7 @@ var InstanceRoute = Spine.Class.create({
         app.get('/instances/:instancename/count', this.countInstances);
         app.get('/instances/:instancename', this.getInstance);
         app.post('/instances', this.postInstance);
-        app.put('/instances', this.putInstance);
+        app.put('/instances/:instancename', this.putInstance);
     },
     getInstances: function(request, response) {
         console.log("Hawk: getInstances");
@@ -56,7 +56,7 @@ var InstanceRoute = Spine.Class.create({
     },
     putInstance: function(request, response) {
         console.log("Hawk: putInstance" + util.inspect(request.body));
-        var instanceName = request.body.name;
+        var instanceName = request.params.instancename;
         
         Instance.count({ name: instanceName }, function(err, count) {
             console.log("Instance " + instanceName + " count:" + count);
@@ -73,6 +73,8 @@ InstanceRoute.extend({
         var instance = new Instance();
         instance.name = inputInstance.name;
         instance.state = inputInstance.state;
+        instance.vmcontainer = inputInstance.vmcontainer;
+        instance.logtimestamp = inputInstance.logtimestamp;
         instance.save(function(err) {
             if (err) {
                 return new Error("unable to save instance: " + instance.name + "- " + err);
