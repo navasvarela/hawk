@@ -1,15 +1,32 @@
 <html>
 <head>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
     <script type="text/javascript" src="http://109.144.10.52:3000/faye.js"></script>
     <script type="text/javascript">
-        var client = new Faye.Client('http://109.144.10.52:3000/faye');
-        var subscription = client.subscribe('/faye', function(message) {
-            console.log(message.text);    
+        $(function() {
+            // ready
+            function displayMessage(message) {
+                var element = "<div class='message'>Name: " + message.name + " - State: " + message.state + "</div>";
+                $('#message-results').prepend(element);
+            };
+        
+            var client = new Faye.Client('http://109.144.10.52:3000/faye');
+            var subscription = client.subscribe('/faye', function(message) {
+                console.log(message.text.name + " - " + message.text.state);    
+                displayMessage(message.text);
+            });
+            
         });
+        
+        
         
     </script>
 </head>
 <body>
-<p> This is a simple HTML file </p>
+<div class="message-container">
+    <div id="message-results">
+        
+    </div>
+</div>
 </body>
 </html>

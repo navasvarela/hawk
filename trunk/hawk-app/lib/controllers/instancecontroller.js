@@ -44,8 +44,9 @@ var InstanceController = Spine.Class.create({
         Instance.count({ name: instanceName }, function(err, count) {
             console.log("Instance " + instanceName + " count:" + count);
             if (count === 0) {
-                InstanceController.trigger("create", instanceName);
-                InstanceController.saveInstance(request.body);
+                var instance = InstanceController.saveInstance(request.body);
+                console.log("Saved instance:" + instance);
+                InstanceController.trigger("create", instance);
                 response.send('OK');
             } else {
                 console.log("Cannot create an existing instance:" + instanceName);
@@ -60,8 +61,9 @@ var InstanceController = Spine.Class.create({
         
         Instance.count({ name: instanceName }, function(err, count) {
             console.log("Instance " + instanceName + " count:" + count);
-            InstanceController.trigger("update", instanceName);
-            InstanceController.saveInstance(request.body);
+            var instance = InstanceController.saveInstance(request.body);
+            console.log("Saved instance:" + instance);
+            InstanceController.trigger("update", instance);
             response.send('OK');
         });
         
@@ -79,7 +81,11 @@ InstanceController.extend({
             if (err) {
                 return new Error("unable to save instance: " + instance.name + "- " + err);
             }
+            
+            
         });
+        
+        return instance;
     }
 });
 
