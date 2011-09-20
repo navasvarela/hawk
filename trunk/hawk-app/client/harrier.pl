@@ -31,6 +31,24 @@ while (<>) {
       system "curl -v -i -X PUT -d $post";
       print "\n";
    }
+   if (/InstanceNetworkSetupHandler.handle.*instanceId=(\S{10}).*$/) {
+       my $instance = $1;
+       
+       my $post = qq|'{"name":"$instance", "state":"received message in network manager", "vmcontainer": "$vm_container", "logtimestamp": "$log_timestamp"}' -H |
+               . qq|"$content_type" $url/instances/$instance|;
+    
+       system "curl -v -i -X PUT -d $post";
+       print "\n";
+   }
+   if (/LibvirtManager.startInstance.*instance.(\S{10}).*$/) {
+       my $instance = $1;
+       
+       my $post = qq|'{"name":"$instance", "state":"started instance", "vmcontainer": "$vm_container", "logtimestamp": "$log_timestamp"}' -H |
+               . qq|"$content_type" $url/instances/$instance|;
+    
+       system "curl -v -i -X PUT -d $post";
+       print "\n";       
+   }
    if (/DeliverHandler.terminateInstance.*Instance:(.*)$/) {
       my $instance = $1;
       my $post = qq|'{"name":"$instance", "state":"terminated request received by instance manager", "vmcontainer": "$vm_container", "logtimestamp": "$log_timestamp"}' -H |
