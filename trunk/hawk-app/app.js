@@ -1,6 +1,6 @@
 var express = require('express'),
     mongoose = require('mongoose'),
-    InstanceRoute = require('./lib/routes/instances'),
+    InstanceController = require('./lib/controllers/instancecontroller'),
     InstanceModel = require('./lib/models/instance'),
     faye = require('faye');
 
@@ -43,9 +43,9 @@ app.post('/errors', function(req, res) {
 var bayeux = new faye.NodeAdapter({mount: '/faye', timeout: 45});
 bayeux.attach(app);
 
-var instanceRoute = new InstanceRoute(app);
+var instanceController = new InstanceController(app);
 
-InstanceRoute.bind("create update", function(message) {
+InstanceController.bind("create update", function(message) {
     console.log("new instance message:" + message);
     bayeux.getClient().publish('/faye', {
         text: message

@@ -2,7 +2,7 @@ var util = require('util'),
     Spine = require('spine'),
     Instance = require('../models/instance');
     
-var InstanceRoute = Spine.Class.create({
+var InstanceController = Spine.Class.create({
     init: function(app) {
         app.get('/instances', this.getInstances);
         app.get('/instances/:instancename/count', this.countInstances);
@@ -44,8 +44,8 @@ var InstanceRoute = Spine.Class.create({
         Instance.count({ name: instanceName }, function(err, count) {
             console.log("Instance " + instanceName + " count:" + count);
             if (count === 0) {
-                InstanceRoute.trigger("create", instanceName);
-                InstanceRoute.saveInstance(request.body);
+                InstanceController.trigger("create", instanceName);
+                InstanceController.saveInstance(request.body);
                 response.send('OK');
             } else {
                 console.log("Cannot create an existing instance:" + instanceName);
@@ -60,15 +60,15 @@ var InstanceRoute = Spine.Class.create({
         
         Instance.count({ name: instanceName }, function(err, count) {
             console.log("Instance " + instanceName + " count:" + count);
-            InstanceRoute.trigger("update", instanceName);
-            InstanceRoute.saveInstance(request.body);
+            InstanceController.trigger("update", instanceName);
+            InstanceController.saveInstance(request.body);
             response.send('OK');
         });
         
     }
 });
 
-InstanceRoute.extend({
+InstanceController.extend({
     saveInstance: function(inputInstance) {
         var instance = new Instance();
         instance.name = inputInstance.name;
@@ -83,5 +83,5 @@ InstanceRoute.extend({
     }
 });
 
-InstanceRoute.extend(Spine.Events);
-module.exports = InstanceRoute;
+InstanceController.extend(Spine.Events);
+module.exports = InstanceController;
