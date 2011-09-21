@@ -39,7 +39,6 @@ bayeux.attach(app);
 var InstanceController = require('./lib/controllers/instancecontroller')(app);
 
 InstanceController.bind("create update", function(message) {
-    console.log("new instance message:" + message);
     bayeux.getClient().publish('/faye', {
         text: message
     });

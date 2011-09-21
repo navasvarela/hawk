@@ -20,7 +20,7 @@ while (<>) {
       my $post = qq|'{"name":"$instance", "state":"api request received", "vmcontainer": "$vm_container", "logtimestamp": "$log_timestamp"}' -H |
                . qq|"$content_type" $url/instances|;
 
-      system "curl -v -i -X POST -d $post";
+      system "curl -v -i -X PUT -d $post";
       print "\n";
    }
    if (/Received.RUN_INSTANCE.*instanceIds=\[(.*)\]/) {

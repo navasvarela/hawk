@@ -15,15 +15,30 @@
         <script type="text/javascript">
             $(function() {
                 // ready
-                function displayMessage(message) {
-                    $('#stream_message_tmpl').tmpl(message).prependTo('#stream_messages');
+                function displayMessage(message, element) {
+                    $('#stream_message_tmpl').tmpl(message).prependTo(element);
                 };
             
                 var client = new Faye.Client('http://109.144.10.52:3000/faye');
                 var subscription = client.subscribe('/faye', function(message) {
-                    console.log(message.text.name + " - " + message.text.state);    
-                    displayMessage(message.text);
+                    console.log(message.text.name + " - " + message.text.state);
+                    displayMessage(message.text, '#stream_messages');
                 });
+                
+                $('#querysearchform').submit(function(data) {
+                    
+                    var self = $(this);
+                    var instanceId = $('#querysearchform > #instanceid').val();
+                    console.log("Searching events for " + instanceId);
+                    
+                    $.get("/instances/" + instanceId, function(json) {
+		                $('#query_messages').children().remove().end();
+                        displayMessage(json, '#query_messages');
+	                });
+                    
+                    return false;
+                });
+                
             });
         </script>
     </head>
@@ -42,16 +57,18 @@
                                 <h1>Live Stream</h1>
                             </div>				
                             <div class="scrollable">
-                                <ul id="stream_messages" class="sortable">
-                                    <li class="ui-state-default message_div">
-                                        <div>Stream Message 1</div>
-                                    </li>
-                                </ul>
+                                <ul id="stream_messages" class="sortable"></ul>
                             </div>
                         </td>
                     	<td id="queryview" style="width: 50%">
                             <div id="query_heading" class="stage_heading">
                                 <h1>Query</h1>
+                            </div>
+                            <div id="search_container">
+                                <form id="querysearchform" action="#">
+                                    <input class="search-field" type="text" id="instanceid" />
+                                    <input class="search-submit" value="Submit" type="submit" />
+                                </form>
                             </div>
                             <div class="scrollable">
                                 <ul id="query_messages" class="sortable"></ul>
