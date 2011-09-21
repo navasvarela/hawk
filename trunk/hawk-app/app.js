@@ -57,7 +57,7 @@ app.listen(3000);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
 
 // Test code
-/*
+
 setInterval(function() {
     var instance = new InstanceModel();
     instance.name = "i-000abc";
@@ -67,4 +67,3 @@ setInterval(function() {
         
     InstanceController.trigger("update", instance);
 }, 2000);
-*/

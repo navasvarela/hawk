@@ -7,12 +7,16 @@
         <script type="text/javascript" src="javascripts/jquery.min.js"></script>
         <script type="text/javascript" src="javascripts/jquery.tmpl.min.js"></script>
         <script type="text/javascript" src="http://109.144.10.52:3000/faye.js"></script>
+        <script id="stream_message_tmpl" type="text/html">
+            <li class="ui-state-default message_div">
+                <div>{{= name}} :: "{{= state}}" on {{= vmcontainer}} @ {{= logtimestamp}}</div>
+            </li>
+        </script>
         <script type="text/javascript">
             $(function() {
                 // ready
                 function displayMessage(message) {
-                    var element = "<div class='message'>Name: " + message.name + " - State: " + message.state + "</div>";
-                    $('#stream_messages').prepend(element);
+                    $('#stream_message_tmpl').tmpl(message).prependTo('#stream_messages');
                 };
             
                 var client = new Faye.Client('http://109.144.10.52:3000/faye');
