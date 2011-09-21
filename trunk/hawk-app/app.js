@@ -30,7 +30,7 @@ app.configure('production', function(){
 
 // Routes
 app.get('/', function(req, res){
-  res.sendfile('./public/index.html');
+  res.sendfile('./public/index2.html');
 });
 
 // catch errors

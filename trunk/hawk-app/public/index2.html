@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html  xmlns="http://www.w3.org/1999/xhtml" xmlns:a="http://ajax.org/2005/aml" >
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Hawk :: Dashboard</title>
+        <link rel="stylesheet" type="text/css" href="stylesheets/style.css" />
+        <script type="text/javascript" src="javascripts/jquery.min.js"></script>
+        <script type="text/javascript" src="javascripts/jquery.tmpl.min.js"></script>
+        <script type="text/javascript" src="http://109.144.10.52:3000/faye.js"></script>
+        <script type="text/javascript">
+            $(function() {
+                // ready
+                function displayMessage(message) {
+                    var element = "<div class='message'>Name: " + message.name + " - State: " + message.state + "</div>";
+                    $('#stream_messages').prepend(element);
+                };
+            
+                var client = new Faye.Client('http://109.144.10.52:3000/faye');
+                var subscription = client.subscribe('/faye', function(message) {
+                    console.log(message.text.name + " - " + message.text.state);    
+                    displayMessage(message.text);
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div class="nav">
+            <ul>
+                <li>Instances</li>
+            </ul>
+        </div>
+        <div class="container">
+            <table id="dashboard_layout" class="layout" style="width: 100%">
+                <tbody>
+                    <tr>
+                        <td id="streamview" style="width: 50%">
+                            <div id="stream_heading" class="stage_heading">
+                                <h1>Live Stream</h1>
+                            </div>				
+                            <div class="scrollable">
+                                <ul id="stream_messages" class="sortable">
+                                    <li class="ui-state-default message_div">
+                                        <div>Stream Message 1</div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    	<td id="queryview" style="width: 50%">
+                            <div id="query_heading" class="stage_heading">
+                                <h1>Query</h1>
+                            </div>
+                            <div class="scrollable">
+                                <ul id="query_messages" class="sortable"></ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>
