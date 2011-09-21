@@ -30,13 +30,7 @@ app.configure('production', function(){
 
 // Routes
 app.get('/', function(req, res){
-  res.sendfile('./public/index2.html');
-});
-
-// catch errors
-app.post('/errors', function(req, res) {
-   console.log("New error:" + req.body);
-   res.send('OK');
+  res.sendfile('./public/index.html');
 });
 
 var bayeux = new faye.NodeAdapter({mount: '/faye', timeout: 45});
@@ -58,6 +52,7 @@ console.log("Express server listening on port %d in %s mode", app.address().port
 
 // Test code
 
+/*
 setInterval(function() {
     var instance = new InstanceModel();
     instance.name = "i-000abc";
@@ -67,3 +62,4 @@ setInterval(function() {
         
     InstanceController.trigger("update", instance);
 }, 2000);
+*/

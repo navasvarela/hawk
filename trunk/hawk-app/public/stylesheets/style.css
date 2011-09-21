@@ -118,6 +118,15 @@ th.desc a {
     overflow-y: auto;
 }
 
+.scrollable ul {
+    border-right: 1px solid #DFDFDF;
+    border-top: 1px solid #E5E5E5;
+    list-style: none outside none;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+}
+
 .sortable { 
     list-style-type: none; 
     margin: 0;
@@ -130,6 +139,9 @@ th.desc a {
 }
 
 .message_div {
-    border: 2px solid gray;
-	padding: 5px 10px;	
+    border-bottom: 1px solid #E5E5E5;
+    clear: both;
+    overflow: hidden;
+    color:#222222;
+    padding:4px;
 }
