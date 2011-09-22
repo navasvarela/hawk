@@ -113,6 +113,10 @@ th.asc a, th.desc a {
 
 
 /* APPLICATION */
+div#stream_heading img {
+    float: right;
+}
+
 .stage_heading h1 {
     text-align: center;
 	color: #121516 !important;

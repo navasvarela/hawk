@@ -61,4 +61,3 @@ setInterval(function() {
     InstanceController.trigger("update", instance);
 }, 2000);
 */
-
