@@ -39,7 +39,7 @@ bayeux.attach(app);
 var InstanceController = require('./lib/controllers/instancecontroller')(app);
 
 InstanceController.bind("create update", function(message) {
-    bayeux.getClient().publish('/faye', {
+    bayeux.getClient().publish('/instances', {
         text: message
     });
 });
@@ -50,7 +50,6 @@ app.listen(3000);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
 
 // Test code
-
 /*
 setInterval(function() {
     var instance = new InstanceModel();
@@ -62,3 +61,4 @@ setInterval(function() {
     InstanceController.trigger("update", instance);
 }, 2000);
 */
+
