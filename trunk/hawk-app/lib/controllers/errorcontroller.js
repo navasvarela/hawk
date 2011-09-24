@@ -33,9 +33,7 @@ ErrorController.extend({
         error.save(function(err) {
             if (err) {
                 return new Error("unable to save error: " + error.name + "- " + err);
-            }
-            
-            
+            } 
         });
         
         return error;

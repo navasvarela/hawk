@@ -7,9 +7,14 @@
         <script type="text/javascript" src="javascripts/jquery.min.js"></script>
         <script type="text/javascript" src="javascripts/jquery.tmpl.min.js"></script>
         <script type="text/javascript" src="/faye.js"></script>
-        <script id="stream_message_tmpl" type="text/html">
+        <script id="stream_instance_tmpl" type="text/html">
             <li class="ui-state-default message_div">
                 <div>{{= name}} :: "{{= state}}" on {{= vmcontainer}} @ {{= logtimestamp}}</div>
+            </li>
+        </script>
+        <script id="stream_error_tmpl" type="text/html">
+            <li class="ui-state-error message_div">
+                <div>"{{= unescape(errorLine)}}" on {{= vmcontainer}} @ {{= logtimestamp}}</div>
             </li>
         </script>
         <script type="text/javascript">
@@ -18,11 +23,20 @@
                 function displayMessage(message, element) {
                     $('#stream_message_tmpl').tmpl(message).prependTo(element);
                 };
+                
+                function displayError(message, element) {
+                    $('#stream_error_tmpl').tmpl(message).prependTo(element);  
+                };
             
                 var client = new Faye.Client('/faye');
-                var subscription = client.subscribe('/instances', function(message) {
+                var instanceSubscription = client.subscribe('/instances', function(message) {
                     console.log(message.text.name + " - " + message.text.state);
                     displayMessage(message.text, '#stream_messages');
+                });
+                
+                var errorSubscription = client.subscribe('/errors', function(message) {
+                    console.log(message.text.errorLine);
+                    displayError(message.text, '#stream_messages');
                 });
                 
                 $('#querysearchform').submit(function(data) {
