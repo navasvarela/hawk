@@ -75,6 +75,7 @@ InstanceController.extend({
         var instance = new Instance();
         instance.name = inputInstance.name;
         instance.state = inputInstance.state;
+        instance.context = inputInstance.context;
         instance.vmcontainer = inputInstance.vmcontainer;
         instance.logtimestamp = inputInstance.logtimestamp;
         instance.save(function(err) {

@@ -6,6 +6,7 @@ var Instance = new Schema({
   id :ObjectId,
   name :String, 
   state :String,
+  context :String,
   vmcontainer :String,
   logtimestamp :String,
   stateChanged: { type: Date, default: Date.now }

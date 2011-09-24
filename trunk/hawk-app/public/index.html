@@ -9,7 +9,7 @@
         <script type="text/javascript" src="/faye.js"></script>
         <script id="stream_instance_tmpl" type="text/html">
             <li class="ui-state-default message_div">
-                <div><a class="instancelink" href="#">{{= name}}</a> :: "{{= state}}" on {{= vmcontainer}} @ {{= logtimestamp}}</div>
+                <div>[{{= context}}] - <a class="instancelink" href="#">{{= name}}</a> - "{{= state}}" on {{= vmcontainer}} @ {{= logtimestamp}}</div>
             </li>
         </script>
         <script id="stream_error_tmpl" type="text/html">

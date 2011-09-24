@@ -143,11 +143,6 @@ div#stream_heading img {
 	padding: 0;
 }
 
-.ui-state-default { 
-    height: 1em; 
-	line-height: 0.8em; 
-}
-
 .ui-state-error { 
     border: solid 1px #CE2027;
     background: #F6CBCA;
