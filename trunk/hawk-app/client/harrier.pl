@@ -2,13 +2,14 @@
 
 use URI::Escape;
 
-my $debug=1;
+my $debug=0;
 
 print "Running harrier\n";
 
 sub process {
    ($commandline) = @_;
    ($debug) ? print $commandline : system $commandline;
+    print "\n";
 }
 
 while (<>) {
@@ -29,10 +30,7 @@ while (<>) {
       my $post = qq|'{"vmcontainer": "$vm_container", "logtimestamp": "$log_timestamp", "errorLine": "$line"}' -H |
                . qq|"$content_type" $url/errors|;
 
-      &process("curl -v -i -X POST -d $post");
-      
-
-      print "\n";
+      &process("curl -v -i -X POST -d $post");      
    }
 
    if (/RunInstancesServiceHelper.runInstances.*Requesting.new.Instance.*instanceId=(.{10}).*$/) {
@@ -41,7 +39,6 @@ while (<>) {
                . qq|"$content_type" $url/instances/$instance|;
 
       &process("curl -v -i -X PUT -d $post");
-      print "\n";
    }
    if (/Received.RUN_INSTANCE.*instanceIds=\[(.*)\]/) {
       my $instance = $1;
@@ -49,7 +46,6 @@ while (<>) {
                . qq|"$content_type" $url/instances/$instance|;
 
       &process("curl -v -i -X PUT -d $post");
-      print "\n";
    }
    if (/InstanceNetworkSetupHandler.handle.*instanceId=(\S{10}).*$/) {
        my $instance = $1;
@@ -58,7 +54,6 @@ while (<>) {
                . qq|"$content_type" $url/instances/$instance|;
     
        &process("curl -v -i -X PUT -d $post");
-       print "\n";
    }
    if (/LibvirtManager.startInstance.*instance.(\S{10}).*$/) {
        my $instance = $1;
@@ -67,7 +62,6 @@ while (<>) {
                . qq|"$content_type" $url/instances/$instance|;
     
        &process("curl -v -i -X PUT -d $post");
-       print "\n";       
    }
    if (/DeliverHandler.terminateInstance.*Instance:(.*)$/) {
       my $instance = $1;
@@ -75,7 +69,6 @@ while (<>) {
                . qq|"$content_type" $url/instances/$instance|;
 
       &process("curl -v -i -X PUT -d $post");
-      print "\n";
    }
 
 }

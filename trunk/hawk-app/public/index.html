@@ -9,7 +9,7 @@
         <script type="text/javascript" src="/faye.js"></script>
         <script id="stream_instance_tmpl" type="text/html">
             <li class="ui-state-default message_div">
-                <div><a href="/instances/{{= name}}">{{= name}}</a> :: "{{= state}}" on {{= vmcontainer}} @ {{= logtimestamp}}</div>
+                <div><a class="instancelink" href="#">{{= name}}</a> :: "{{= state}}" on {{= vmcontainer}} @ {{= logtimestamp}}</div>
             </li>
         </script>
         <script id="stream_error_tmpl" type="text/html">
@@ -17,6 +17,8 @@
                 <div>"{{= unescape(errorLine)}}" on {{= vmcontainer}} @ {{= logtimestamp}}</div>
             </li>
         </script>
+        <!--script type="text/javascript" src="javascripts/application.js"></script-->
+        
         <script type="text/javascript">
             $(function() {
                 // ready
@@ -29,14 +31,20 @@
                 };
             
                 var client = new Faye.Client('/faye');
-                var instanceSubscription = client.subscribe('/instances', function(message) {
+                
+                client.subscribe('/instances', function(message) {
                     console.log(message.text.name + " - " + message.text.state);
                     displayMessage(message.text, '#stream_messages');
                 });
                 
-                var errorSubscription = client.subscribe('/errors', function(message) {
+                client.subscribe('/errors', function(message) {
                     console.log(message.text.errorLine);
                     displayError(message.text, '#stream_messages');
+                });
+                
+                client.subscribe('/heartbeats', function(message) {
+                    console.log(message.text);
+                    $('#heartbeats').text(message.text);
                 });
                 
                 $('#querysearchform').submit(function(data) {
@@ -53,6 +61,12 @@
                     return false;
                 });
                 
+                $('.instancelink').live('click', function(e) {
+                   e.preventDefault();
+                   var self = $(this);
+                   $('#instanceid').val(self.text());
+                   $('#querysearchform').submit();
+                });
             });
         </script>
     </head>
@@ -94,6 +108,7 @@
                     </tr>
                 </tbody>
             </table>
+            <div id="heartbeats" />
         </div>
     </body>
 </html>
