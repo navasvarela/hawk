@@ -2,7 +2,14 @@
 
 use URI::Escape;
 
+my $debug=1;
+
 print "Running harrier\n";
+
+sub process {
+   ($commandline) = @_;
+   ($debug) ? print $commandline : system $commandline;
+}
 
 while (<>) {
 
@@ -22,7 +29,9 @@ while (<>) {
       my $post = qq|'{"vmcontainer": "$vm_container", "logtimestamp": "$log_timestamp", "errorLine": "$line"}' -H |
                . qq|"$content_type" $url/errors|;
 
-      print "curl -v -i -X POST -d $post";
+      &process "curl -v -i -X POST -d $post";
+      
+
       print "\n";
    }
 
@@ -31,7 +40,7 @@ while (<>) {
       my $post = qq|'{"name":"$instance", "state":"api request received", "vmcontainer": "$vm_container", "logtimestamp": "$log_timestamp"}' -H |
                . qq|"$content_type" $url/instances|;
 
-      system "curl -v -i -X PUT -d $post";
+      &process "curl -v -i -X PUT -d $post";
       print "\n";
    }
    if (/Received.RUN_INSTANCE.*instanceIds=\[(.*)\]/) {
@@ -39,7 +48,7 @@ while (<>) {
       my $post = qq|'{"name":"$instance", "state":"anycast received by instance manager", "vmcontainer": "$vm_container", "logtimestamp": "$log_timestamp"}' -H |
                . qq|"$content_type" $url/instances/$instance|;
 
-      system "curl -v -i -X PUT -d $post";
+      &process "curl -v -i -X PUT -d $post";
       print "\n";
    }
    if (/InstanceNetworkSetupHandler.handle.*instanceId=(\S{10}).*$/) {
@@ -48,7 +57,7 @@ while (<>) {
        my $post = qq|'{"name":"$instance", "state":"received message in network manager", "vmcontainer": "$vm_container", "logtimestamp": "$log_timestamp"}' -H |
                . qq|"$content_type" $url/instances/$instance|;
     
-       system "curl -v -i -X PUT -d $post";
+       &process "curl -v -i -X PUT -d $post";
        print "\n";
    }
    if (/LibvirtManager.startInstance.*instance.(\S{10}).*$/) {
@@ -57,7 +66,7 @@ while (<>) {
        my $post = qq|'{"name":"$instance", "state":"started instance", "vmcontainer": "$vm_container", "logtimestamp": "$log_timestamp"}' -H |
                . qq|"$content_type" $url/instances/$instance|;
     
-       system "curl -v -i -X PUT -d $post";
+       &process "curl -v -i -X PUT -d $post";
        print "\n";       
    }
    if (/DeliverHandler.terminateInstance.*Instance:(.*)$/) {
@@ -65,7 +74,7 @@ while (<>) {
       my $post = qq|'{"name":"$instance", "state":"terminated request received by instance manager", "vmcontainer": "$vm_container", "logtimestamp": "$log_timestamp"}' -H |
                . qq|"$content_type" $url/instances/$instance|;
 
-      system "curl -v -i -X PUT -d $post";
+      &process "curl -v -i -X PUT -d $post";
       print "\n";
    }
 
