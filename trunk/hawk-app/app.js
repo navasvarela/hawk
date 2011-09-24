@@ -58,15 +58,11 @@ mongoose.connect('mongodb://localhost/hawk-dev');
 app.listen(3000);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
 
-// Test code
-/*
+
+// Heartbeat
 setInterval(function() {
-    var instance = new InstanceModel();
-    instance.name = "i-000abc";
-    instance.state = "dummy state change";
-    instance.vmcontainer = "vm-container-0-99";
-    instance.logtimestamp = "2011-09-18 15:03:09,305";
-        
-    InstanceController.trigger("update", instance);
-}, 2000);
-*/
+    bayeux.getClient().publish('/heartbeats', {
+        text: new Date() 
+    });
+}, 5000);
+
