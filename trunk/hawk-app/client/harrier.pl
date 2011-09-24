@@ -1,5 +1,7 @@
 #!/usr/bin/perl
 
+use URI::Escape;
+
 print "Running harrier\n";
 
 while (<>) {
@@ -8,11 +10,20 @@ while (<>) {
    my $content_type = "Content-Type: application/json";
    my $vm_container = "vm-container";
    my $log_timestamp = "00000000000000";
+   my $line = uri_escape($_);
 
    # get vm-container and log timestamp
    if (/^(vm-container-\d{1,}-\d{1,})\:\s(\S+\s\S+).*$/) {
       $vm_container = $1;
       $log_timestamp = $2;
+   }
+
+   if (/ERROR/) {
+      my $post = qq|'{"vmcontainer": "$vm_container", "logtimestamp": "$log_timestamp", "errorLine": "$line"}' -H |
+               . qq|"$content_type" $url/errors|;
+
+      print "curl -v -i -X POST -d $post";
+      print "\n";
    }
 
    if (/RunInstancesServiceHelper.runInstances.*Requesting.new.Instance.*instanceId=(.{10}).*$/) {
