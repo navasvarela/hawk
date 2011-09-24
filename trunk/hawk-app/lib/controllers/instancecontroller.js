@@ -11,14 +11,14 @@ var InstanceController = Spine.Class.create({
         app.put('/instances/:instancename', this.putInstance);
     },
     getInstances: function(request, response) {
-        console.log("Hawk: getInstances");
+        //console.log("Hawk: getInstances");
         Instance.find({}, function(err, instances) {
             response.json(instances);
         });
     },
     getInstance: function(request, response) {
         var instancename = request.params.instancename;
-        console.log("Hawk: getInstance(" + instancename + ")");
+        //console.log("Hawk: getInstance(" + instancename + ")");
         Instance.find({ "name": instancename }, function(err, instances) {
             if (err) {
                 console.log("Unable to find instance:" + instancename + " - " + err);
@@ -32,20 +32,20 @@ var InstanceController = Spine.Class.create({
     },
     countInstances: function(request, response) {
         var instanceName = request.params.instancename;
-        console.log("Counting all instances of " + instanceName);
+        //console.log("Counting all instances of " + instanceName);
         Instance.count({ name: instanceName }, function(err, count) {
-            console.log("Total instances:" + count);
-            response.send('OK');
+            // console.log("Total instances:" + count);
+            response.send("{'total': "+ count + "}");
         });
     },
     postInstance: function(request, response) {
-        console.log("Hawk: postInstance " + util.inspect(request.body));
+        //console.log("Hawk: postInstance " + util.inspect(request.body));
         var instanceName = request.body.name;
         Instance.count({ name: instanceName }, function(err, count) {
-            console.log("Instance " + instanceName + " count:" + count);
+            // console.log("Instance " + instanceName + " count:" + count);
             if (count === 0) {
                 var instance = InstanceController.saveInstance(request.body);
-                console.log("Saved instance:" + instance);
+                //console.log("Saved instance:" + instance);
                 InstanceController.trigger("create", instance);
                 response.send('OK');
             } else {
@@ -56,13 +56,13 @@ var InstanceController = Spine.Class.create({
         
     },
     putInstance: function(request, response) {
-        console.log("Hawk: putInstance" + util.inspect(request.body));
+        //console.log("Hawk: putInstance" + util.inspect(request.body));
         var instanceName = request.params.instancename;
         
         Instance.count({ name: instanceName }, function(err, count) {
-            console.log("Instance " + instanceName + " count:" + count);
+            // console.log("Instance " + instanceName + " count:" + count);
             var instance = InstanceController.saveInstance(request.body);
-            console.log("Saved instance:" + instance);
+            // console.log("Saved instance:" + instance);
             InstanceController.trigger("update", instance);
             response.send('OK');
         });

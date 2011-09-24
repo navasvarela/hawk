@@ -38,7 +38,7 @@ while (<>) {
    if (/RunInstancesServiceHelper.runInstances.*Requesting.new.Instance.*instanceId=(.{10}).*$/) {
       my $instance = $1;
       my $post = qq|'{"name":"$instance", "state":"api request received", "vmcontainer": "$vm_container", "logtimestamp": "$log_timestamp"}' -H |
-               . qq|"$content_type" $url/instances|;
+               . qq|"$content_type" $url/instances/$instance|;
 
       &process("curl -v -i -X PUT -d $post");
       print "\n";
