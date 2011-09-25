@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
 
-var Error = new Schema({
+var LogError = new Schema({
   id :ObjectId,
   name :String, 
   errorLine :String,
@@ -10,4 +10,4 @@ var Error = new Schema({
   logtimestamp :String
 });
 
-module.exports = mongoose.model('Error', Error);
+module.exports = mongoose.model('LogError', LogError);

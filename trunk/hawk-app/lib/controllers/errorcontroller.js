@@ -1,6 +1,6 @@
 var util = require('util'),
     Spine = require('spine'),
-    Error = require('../models/error');
+    LogError = require('../models/logerror');
     
 var ErrorController = Spine.Class.create({
     init: function(app) {
@@ -9,15 +9,12 @@ var ErrorController = Spine.Class.create({
     },
     getErrors: function(request, response) {
         console.log("Hawk: getErrors");
-        Error.find({}, function(err, errors) {
+        LogError.find({}, function(err, errors) {
             response.json(errors);
         });
     },
     postError: function(request, response) {
-        console.log("Hawk: postError " + util.inspect(request.body));
-        
         var error = ErrorController.saveError(request.body);
-        console.log("Saved error");
         ErrorController.trigger("create", error);
         response.send('OK');
     }
@@ -25,7 +22,7 @@ var ErrorController = Spine.Class.create({
 
 ErrorController.extend({
     saveError: function(inputError) {
-        var error = new Error();
+        var error = new LogError();
         error.vmcontainer = inputError.vmcontainer;
         error.logtimestamp = inputError.logtimestamp;
         error.errorLine = inputError.errorLine;

@@ -1,7 +1,8 @@
 var express = require('express'),
     mongoose = require('mongoose'),
     InstanceModel = require('./lib/models/instance'),
-    ErrorModel = require('./lib/models/error'),
+    LogErrorModel = require('./lib/models/logerror'),
+    SetupModel = require('./lib/models/property'),
     faye = require('faye');
 
 var app = module.exports = express.createServer();
@@ -23,7 +24,8 @@ app.configure('development', function(){
     
     console.log("clear the database");
     InstanceModel.remove({}, function(){});
-    ErrorModel.remove({}, function() {});
+    LogErrorModel.remove({}, function() {});
+    SetupModel.remove({}, function() {});
 });
 
 app.configure('production', function(){
@@ -40,6 +42,7 @@ bayeux.attach(app);
 
 var InstanceController = require('./lib/controllers/instancecontroller')(app);
 var ErrorController = require('./lib/controllers/errorcontroller')(app);
+require('./lib/controllers/propertycontroller')(app);
 
 InstanceController.bind("create update", function(message) {
     bayeux.getClient().publish('/instances', {
