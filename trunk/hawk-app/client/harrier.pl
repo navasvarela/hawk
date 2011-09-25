@@ -1,5 +1,15 @@
 #!/usr/bin/perl
 
+# Install URI module
+# wget http://search.cpan.org/CPAN/authors/id/G/GA/GAAS/URI-1.59.tar.gz
+# tar xf URI-1.59.tar.gz
+# cd URI-1.59
+# perl Makefile.PL
+# make
+# make test
+# make install
+# perl -MURI::Escape -e 1
+ 
 use URI::Escape;
 
 my $debug=0;
