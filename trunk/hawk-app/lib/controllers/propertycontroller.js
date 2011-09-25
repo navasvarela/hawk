@@ -14,9 +14,9 @@ var PropertyController = Spine.Class.create({
         });
     },
     getProperty: function(request, response) {
-        var property = request.params.property;
-        
-        Property.find({ "name": property }, function(err, data) {
+        var property = request.params.propertyname;
+        console.log("Getting property:" + property);
+        Property.findOne({ "name": property }, function(err, data) {
             if (err) {
                 console.log("Unable to find property:" + property + " - " + err);
                 response.send(500);

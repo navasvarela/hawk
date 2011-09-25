@@ -12,7 +12,7 @@
  
 use URI::Escape;
 
-my $debug=0;
+my $debug=1;
 
 print "Running harrier\n";
 
@@ -21,13 +21,21 @@ sub process {
    ($debug) ? print $commandline : system $commandline;
     print "\n";
 }
+my $url = 'http://109.144.10.52:3000';
+my $content_type = "Content-Type: application/json";
+my $vm_container = "vm-container";
+my $log_timestamp = "00000000000000";
+
+my $vmcontainers = $ENV{'CONTAINERS'};
+chomp($h = `hostname`);
+
+my $post = qq|'{"hostname": "$h", "vmcontainers": "$vmcontainers"}' -H |
+       . qq|"$content_type" $url/properties|;
+
+&process("curl -v -i -X POST -d $post");
 
 while (<>) {
 
-   my $url = 'http://109.144.10.52:3000';
-   my $content_type = "Content-Type: application/json";
-   my $vm_container = "vm-container";
-   my $log_timestamp = "00000000000000";
    my $line = uri_escape($_);
 
    # get vm-container and log timestamp

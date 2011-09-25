@@ -67,6 +67,12 @@
                    $('#instanceid').val(self.text());
                    $('#querysearchform').submit();
                 });
+                
+                // get hostname
+                $.get("/properties/hostname", function(json) {
+                    console.log(json[0].value); 
+                    $('#hostname').text(json[0].value);
+                });
             });
         </script>
     </head>
@@ -108,7 +114,7 @@
                     </tr>
                 </tbody>
             </table>
-            <div id="heartbeats" />
+            <span id="hostname" /> :: Last heartbeat <span id="heartbeats" />
         </div>
     </body>
 </html>
