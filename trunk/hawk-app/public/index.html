@@ -70,8 +70,7 @@
                 
                 // get hostname
                 $.get("/properties/hostname", function(json) {
-                    console.log(json[0].value); 
-                    $('#hostname').text(json[0].value);
+                    $('#hostname').text(json.value);
                 });
             });
         </script>
@@ -90,7 +89,7 @@
                     <tr>
                         <td id="streamview" style="width: 50%">
                             <div id="stream_heading" class="stage_heading">
-                                <h1>Live Stream</h1>
+                                <h1>Live Stream(<span id="hostname"></span>)</h1>
                                 <img src="images/tiny_red.gif" />
                             </div>				
                             <div class="scrollable">
@@ -114,7 +113,7 @@
                     </tr>
                 </tbody>
             </table>
-            <span id="hostname" /> :: Last heartbeat <span id="heartbeats" />
+            Last heartbeat: <div id="heartbeats" />
         </div>
     </body>
 </html>
