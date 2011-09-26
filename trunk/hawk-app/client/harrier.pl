@@ -44,6 +44,14 @@ while (<>) {
       $log_timestamp = $2;
    }
 
+   # a hack for sending heartbeats
+   if (/XenRefreshHandler.run/) {
+      my $datetime = localtime;
+      my $post = qq|'{"heartbeat": "$datetime"}' -H "$content_type" $url/heartbeats|;
+
+      &process("curl -v -i -X POST -d $post");
+   }
+
    if (/ERROR/) {
       my $post = qq|'{"vmcontainer": "$vm_container", "logtimestamp": "$log_timestamp", "errorLine": "$line"}' -H |
                . qq|"$content_type" $url/errors|;

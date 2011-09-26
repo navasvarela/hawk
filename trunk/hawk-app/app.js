@@ -37,6 +37,18 @@ app.get('/', function(req, res){
   res.sendfile('./public/index.html');
 });
 
+// Heartbeats
+app.post('/heartbeats', function(req, res) {
+    var hbtime = req.body.heartbeat;
+    console.log("Received heartbeat: " + hbtime);
+    
+    bayeux.getClient().publish('/heartbeats', {
+        text: hbtime 
+    });
+    
+    res.send('OK');
+});
+
 var bayeux = new faye.NodeAdapter({mount: '/faye', timeout: 45});
 bayeux.attach(app);
 
@@ -60,12 +72,3 @@ mongoose.connect('mongodb://localhost/hawk-dev');
 
 app.listen(3000);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
-
-
-// Heartbeat
-setInterval(function() {
-    bayeux.getClient().publish('/heartbeats', {
-        text: new Date() 
-    });
-}, 5000);
-

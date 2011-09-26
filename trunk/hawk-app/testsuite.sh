@@ -1,11 +1,18 @@
 #!/bin/bash
 
 URL="http://localhost:3000"
+SLEEPTIME=2
+if [ $# == 1 ];
+then
+  SLEEPTIME=10
+fi
 
 echo "--------------------------------------------------------------------------"
 echo "Starting express application"
 node app.js & disown
-sleep 2
+echo "Waiting for $SLEEPTIME seconds"
+sleep $SLEEPTIME
+
 echo "--------------------------------------------------------------------------"
 echo "Testing /properties"
 echo "Adding hostname property"
@@ -38,6 +45,12 @@ echo ""
 curl -X GET $URL/errors
 echo ""
 echo "--------------------------------------------------------------------------"
+echo "Testing /heartbeats"
+curl -v -i -X POST -d '{"heartbeat": "Mon Sep 26 19:44:06 2011"}' -H "Content-Type: application/json" $URL/heartbeats
+echo ""
+echo "--------------------------------------------------------------------------"
+echo "Waiting for $SLEEPTIME seconds for things to cool down"
+sleep $SLEEPTIME
 echo "Killing all node express processes"
 ps -ef | grep app.js | grep -v 'grep.app.js' | awk '{print $2}' | xargs kill -9
 echo "--------------------------------------------------------------------------"
