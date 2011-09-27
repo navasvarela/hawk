@@ -40,12 +40,17 @@ app.get('/', function(req, res){
 // Heartbeats
 app.post('/heartbeats', function(req, res) {
     var hbtime = req.body.heartbeat;
-    console.log("Received heartbeat: " + hbtime);
-    
     bayeux.getClient().publish('/heartbeats', {
         text: hbtime 
     });
-    
+    res.send('OK');
+});
+
+// firehose
+app.post('/firehose', function(req, res) {
+    bayeux.getClient().publish('/firehose', {
+        text: req.body 
+    });
     res.send('OK');
 });
 

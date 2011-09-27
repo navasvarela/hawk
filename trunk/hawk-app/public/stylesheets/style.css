@@ -27,23 +27,6 @@ div#header h1 {
 
 /* NAVIGATION BAR */
 
-.nav {
-    background: #fff bottom repeat-x;
-    border: 1px solid #ccc;
-    border-style: solid none solid none;
-    margin-top: 5px;
-    padding: 7px 12px;
-}
-
-.nav ul {
-    list-style-type:none;
-    margin:0;
-    padding:0;
-}
-
-.nav li {
-    display:inline;
-}
 
 /* TABLES */
 

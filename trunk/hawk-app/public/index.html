@@ -17,6 +17,11 @@
                 <div>"{{= unescape(errorLine)}}" on {{= vmcontainer}} @ {{= logtimestamp}}</div>
             </li>
         </script>
+        <script id="stream_log_tmpl" type="text/html">
+            <li class="ui-state-default message_div">
+                <div>"{{= unescape(logLine)}}" on {{= vmcontainer}} @ {{= logtimestamp}}</div>
+            </li>
+        </script>
         <!--script type="text/javascript" src="javascripts/application.js"></script-->
         
         <script type="text/javascript">
@@ -28,6 +33,10 @@
                 
                 function displayError(message, element) {
                     $('#stream_error_tmpl').tmpl(message).prependTo(element);  
+                };
+                
+                function displayLog(message, element) {
+                    $('#stream_log_tmpl').tmpl(message).prependTo(element);  
                 };
             
                 var client = new Faye.Client('/faye');
@@ -45,6 +54,10 @@
                 client.subscribe('/heartbeats', function(message) {
                     console.log(message.text);
                     $('#heartbeats').text(message.text);
+                });
+                
+                client.subscribe('/firehose', function(message) {
+                    displayLog(message.text, '#stream_messages');
                 });
                 
                 $('#querysearchform').submit(function(data) {
@@ -77,11 +90,7 @@
     </head>
     <body>
         <div class="nav">
-            <ul>
-                <li><a href="/instances">Instances</a></li>
-                <li><a href="/volumes">Volumes</a></li>
-                <li><a href="/images">Images</a></li>
-            </ul>
+            Last heartbeat: <span id="heartbeats" />    
         </div>
         <div class="container">
             <table id="dashboard_layout" class="layout" style="width: 100%">
@@ -96,10 +105,19 @@
                                 <ul id="stream_messages" class="sortable"></ul>
                             </div>
                         </td>
-                    	<td id="queryview" style="width: 50%">
-                            <div id="query_heading" class="stage_heading">
-                                <h1>Query</h1>
-                            </div>
+                    	<td id="legendview" style="width: 50%">
+                            <h1>Entities</h1>
+                            <fieldset>
+                                <legend>Entities</legend>
+                                <input id="instances" type="checkbox" value="instances" />
+                                <label for="instances">Instances</label><br/>
+                                <input type="checkbox" id="volumes" value="volumes" />
+                                <label for="volumes">Volume</label><br/>
+                            </fieldset>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="queryview" style="width: 100%">
                             <div id="search_container">
                                 <form id="querysearchform" action="#">
                                     <input class="search-field" type="text" id="instanceid" />
@@ -113,7 +131,6 @@
                     </tr>
                 </tbody>
             </table>
-            Last heartbeat: <div id="heartbeats" />
         </div>
     </body>
 </html>

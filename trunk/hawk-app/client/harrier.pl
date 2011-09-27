@@ -44,6 +44,11 @@ while (<>) {
       $log_timestamp = $2;
    }
 
+   # firehose
+   my $post = qq|'{"vmcontainer": "$vm_container", "logtimestamp": "$log_timestamp", "logLine": "$line"}' -H |
+               . qq|"$content_type" $url/firehose|;
+   &process("curl -v -i -X POST -d $post");
+
    # a hack for sending heartbeats
    if (/XenRefreshHandler.run/) {
       my $datetime = localtime;
