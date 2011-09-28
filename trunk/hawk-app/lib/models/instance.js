@@ -6,7 +6,7 @@ var Instance = new Schema({
   id :ObjectId,
   name :String, 
   state :String,
-  stateChanged: { type: Date, default: Date.now }
+  stateChanged: { type: Date, 'default': Date.now }
 });
 
 module.exports = mongoose.model('Instance', Instance);

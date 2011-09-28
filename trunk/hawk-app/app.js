@@ -44,6 +44,6 @@ InstanceRoute.bind("create", function(message) {
 
 mongoose.connect('mongodb://localhost/hawk-dev');
 
-app.listen(3000);
+app.listen(3333);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
 
