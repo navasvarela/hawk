@@ -6,7 +6,14 @@ var Instance = new Schema({
   id :ObjectId,
   name :String, 
   state :String,
+<<<<<<< HEAD
   stateChanged: { type: Date, 'default': Date.now }
+=======
+  context :String,
+  vmcontainer :String,
+  logtimestamp :String,
+  stateChanged: { type: Date, default: Date.now }
+>>>>>>> hawk/master
 });
 
 module.exports = mongoose.model('Instance', Instance);

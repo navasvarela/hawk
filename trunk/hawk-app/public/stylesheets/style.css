@@ -1,8 +1,138 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    min-width: 1024px;
+    font: 11px verdana, arial, helvetica, sans-serif;
+    overflow-y: hidden;
+    width: 100%;
 }
 
-a {
-  color: #00B7FF;
+a:link, a:visited, a:hover {
+    color: #666;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+h1 {
+    color: #48802c;
+    font-weight: normal;
+    font-size: 16px;
+    margin: .8em 0 .3em 0;
+}
+
+div#header h1 {
+    font-family: 'Philosopher', arial, serif;
+	font-size: 3em;
+	margin: 0;
+	padding-left : 30px;
+}
+
+/* NAVIGATION BAR */
+
+
+/* TABLES */
+
+table {
+    border: 1px solid #ccc;
+    width: 100%
+}
+
+.layout {
+    border-collapse: separate;
+    border-spacing: 13px 0;
+    padding: 0;
+}
+
+tr {
+    border: 0;
+}
+
+td, th {
+    font: 11px verdana, arial, helvetica, sans-serif;
+    line-height: 12px;
+    text-align: left;
+    vertical-align: top;
+}
+
+th {
+    background: #fff;
+    color: #666;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 17px;
+    padding: 2px 6px;
+}
+
+th a:link, th a:visited, th a:hover {
+    color: #333;
+    display: block;
+    font-size: 10px;
+    text-decoration: none;
+    width: 100%;
+}
+th.asc a, th.desc a {
+    background-position: right;
+    background-repeat: no-repeat;
+}
+
+.odd {
+    background: #f7f7f7;
+}
+.even {
+    background: #fff;
+}
+
+/* LIST */
+
+.list table {
+    border-collapse: collapse;
+}
+.list th, .list td {
+    border-left: 1px solid #ddd;
+}
+.list th:hover, .list tr:hover {
+    background: #b2d1ff;
+}
+
+
+/* APPLICATION */
+div#stream_heading img {
+    float: right;
+}
+
+.stage_heading h1 {
+    text-align: center;
+	color: #121516 !important;
+}
+
+.scrollable {
+    height: 500px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.scrollable ul {
+    border-right: 1px solid #DFDFDF;
+    border-top: 1px solid #E5E5E5;
+    list-style: none outside none;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+}
+
+.sortable { 
+    list-style-type: none; 
+    margin: 0;
+	padding: 0;
+}
+
+.ui-state-error { 
+    border: solid 1px #CE2027;
+    background: #F6CBCA;
+}
+
+.message_div {
+    border-bottom: 1px solid #E5E5E5;
+    clear: both;
+    overflow: hidden;
+    color:#222222;
+    padding:4px;
 }

@@ -1,15 +1,136 @@
-<html>
-<head>
-    <script type="text/javascript" src="http://109.144.10.52:8000/faye.js"></script>
-    <script type="text/javascript">
-        var client = new Faye.Client('http://109.144.10.52:8000/faye');
-        var subscription = client.subscribe('/faye', function(message) {
-            console.log(message);    
-        });
+<!DOCTYPE html>
+<html  xmlns="http://www.w3.org/1999/xhtml" xmlns:a="http://ajax.org/2005/aml" >
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Hawk :: Dashboard</title>
+        <link rel="stylesheet" type="text/css" href="stylesheets/style.css" />
+        <script type="text/javascript" src="javascripts/jquery.min.js"></script>
+        <script type="text/javascript" src="javascripts/jquery.tmpl.min.js"></script>
+        <script type="text/javascript" src="/faye.js"></script>
+        <script id="stream_instance_tmpl" type="text/html">
+            <li class="ui-state-default message_div">
+                <div>[{{= context}}] - <a class="instancelink" href="#">{{= name}}</a> - "{{= state}}" on {{= vmcontainer}} @ {{= logtimestamp}}</div>
+            </li>
+        </script>
+        <script id="stream_error_tmpl" type="text/html">
+            <li class="ui-state-error message_div">
+                <div>"{{= unescape(errorLine)}}" on {{= vmcontainer}} @ {{= logtimestamp}}</div>
+            </li>
+        </script>
+        <script id="stream_log_tmpl" type="text/html">
+            <li class="ui-state-default message_div">
+                <div>"{{= unescape(logLine)}}" on {{= vmcontainer}} @ {{= logtimestamp}}</div>
+            </li>
+        </script>
+        <!--script type="text/javascript" src="javascripts/application.js"></script-->
         
-    </script>
-</head>
-<body>
-<p> This is a simple HTML file </p>
-</body>
+        <script type="text/javascript">
+            $(function() {
+                // ready
+                function displayMessage(message, element) {
+                    $('#stream_instance_tmpl').tmpl(message).prependTo(element);
+                };
+                
+                function displayError(message, element) {
+                    $('#stream_error_tmpl').tmpl(message).prependTo(element);  
+                };
+                
+                function displayLog(message, element) {
+                    $('#stream_log_tmpl').tmpl(message).prependTo(element);  
+                };
+            
+                var client = new Faye.Client('/faye');
+                
+                client.subscribe('/instances', function(message) {
+                    console.log(message.text.name + " - " + message.text.state);
+                    displayMessage(message.text, '#stream_messages');
+                });
+                
+                client.subscribe('/errors', function(message) {
+                    console.log(message.text.errorLine);
+                    displayError(message.text, '#stream_messages');
+                });
+                
+                client.subscribe('/heartbeats', function(message) {
+                    console.log(message.text);
+                    $('#heartbeats').text(message.text);
+                });
+                
+                client.subscribe('/firehose', function(message) {
+                    displayLog(message.text, '#stream_messages');
+                });
+                
+                $('#querysearchform').submit(function(data) {
+                    
+                    var self = $(this);
+                    var instanceId = $('#querysearchform > #instanceid').val();
+                    console.log("Searching events for " + instanceId);
+                    
+                    $.get("/instances/" + instanceId, function(json) {
+		                $('#query_messages').children().remove().end();
+                        displayMessage(json, '#query_messages');
+	                });
+                    
+                    return false;
+                });
+                
+                $('.instancelink').live('click', function(e) {
+                   e.preventDefault();
+                   var self = $(this);
+                   $('#instanceid').val(self.text());
+                   $('#querysearchform').submit();
+                });
+                
+                // get hostname
+                $.get("/properties/hostname", function(json) {
+                    $('#hostname').text(json.value);
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div class="nav">
+            Last heartbeat: <span id="heartbeats" />    
+        </div>
+        <div class="container">
+            <table id="dashboard_layout" class="layout" style="width: 100%">
+                <tbody>
+                    <tr>
+                        <td id="streamview" style="width: 50%">
+                            <div id="stream_heading" class="stage_heading">
+                                <h1>Live Stream(<span id="hostname"></span>)</h1>
+                                <img src="images/tiny_red.gif" />
+                            </div>				
+                            <div class="scrollable">
+                                <ul id="stream_messages" class="sortable"></ul>
+                            </div>
+                        </td>
+                    	<td id="legendview" style="width: 50%">
+                            <h1>Entities</h1>
+                            <fieldset>
+                                <legend>Entities</legend>
+                                <input id="instances" type="checkbox" value="instances" />
+                                <label for="instances">Instances</label><br/>
+                                <input type="checkbox" id="volumes" value="volumes" />
+                                <label for="volumes">Volume</label><br/>
+                            </fieldset>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="queryview" style="width: 100%">
+                            <div id="search_container">
+                                <form id="querysearchform" action="#">
+                                    <input class="search-field" type="text" id="instanceid" />
+                                    <input class="search-submit" value="Submit" type="submit" />
+                                </form>
+                            </div>
+                            <div class="scrollable">
+                                <ul id="query_messages" class="sortable"></ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
 </html>
